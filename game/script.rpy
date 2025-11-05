@@ -48,14 +48,21 @@ label start:
 
     p "It's fine. Just another day."
 
-    # menu:
-    #     "What do you do?":
-    #         "Observe people":
-    #             jump scene1_observe
-    #         "Look up":
-    #             jump scene1_lookup
-    #         "Touch chest":
-    #             jump scene1_touch
+    menu:
+
+        "What do you do?"
+
+        "Observe people around you":
+
+            jump scene1_observe
+
+        "Look up at the sky":
+
+            jump scene1_lookup
+        
+        "Touch your chest":
+
+            jump scene1_touch
 
 label scene1_observe:
     p "They all look so calm."
@@ -72,5 +79,31 @@ label scene1_touch:
 label scene2:
     scene bg_city_street with fade
     n "You start walking."
-    n "Every step echoes louder than expected..."
+    n "Every step echoes louder than expected"
+    n "A child laughs; the sounds cuts sharply."
+    n "The narrow street feels familiar, yet something inside your chest begins to tighten."
+
+    p "Why does it sound... closer?"
+
+    menu:
+
+        "What do you do?"
+
+        "Ignore it, keep walking":
+
+            jump scene2_ignore
+
+        "Focus on your breathing":
+
+            jump scene2_breathe
+
+label scene2_ignore:
+    n "You keep walking, trying to ignore the growing discomfort."
+    jump scene3
+
+label scene2_breathe:
+    n "You try to focus on your breathing, but the tightness in your chest worsens."
+    jump scene3
+
+label scene3:
     return
