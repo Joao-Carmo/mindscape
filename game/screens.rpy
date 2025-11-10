@@ -204,51 +204,28 @@ style input:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#choice
 
-# screen choice(items):
-#     style_prefix "choice"
 
-#     vbox:
-#         for i in items:
-#             textbutton i.caption action i.action
-
-
-# style choice_vbox is vbox
-# style choice_button is button
-# style choice_button_text is button_text
-
-# style choice_vbox:
-#     xalign 0.9
-#     ypos 500
-#     yanchor 0.5
-
-#     spacing gui.choice_spacing
-
-# style choice_button is default:
-#     properties gui.button_properties("choice_button")
-
-# style choice_button_text is default:
-#     properties gui.text_properties("choice_button")
 screen choice(items):
+    style_prefix "choice"
+
     vbox:
-        xalign 0.9
-        ypos 405
-        yanchor 0.5
-        spacing 20
-
         for i in items:
-            button:
-                background "gui/choice_frame.png"
-                hover_background "gui/select_choice_frame.png"
-                action i.action
-                xsize 600          # adjust these two values to match your PNG size
-                ysize 120
-                xalign 0.5
+            textbutton i.caption action i.action
 
-                text i.caption:
-                    align (0.5, 0.5)
-                    color "#ffffff"
-                    size 36
-                    outlines [(2, "#000000", 0, 0)]  # optional black outline for clarity
+style choice_vbox is vbox
+style choice_button is button
+style choice_button_text is button_text:
+    size gui.choice_button_text_size
+    xalign 0.5
+
+style choice_vbox:
+    xalign 0.9
+    ypos 500
+    yanchor 0.5
+    spacing 20
+
+style choice_button is default:
+    properties gui.button_properties("choice_button")
 
 
 
