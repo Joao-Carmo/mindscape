@@ -8,7 +8,9 @@ define p = Character('You', what_prefix='"', what_suffix='"')
 # Image declarations with scaling to screen size
 image bg_city_afternoon = im.Scale("gui/bg_city_afternoon.jpg", config.screen_width, config.screen_height)
 image bg_city_street = im.Scale("gui/bg_city_street.jpg", config.screen_width, config.screen_height)
+image bg_narrow_street = im.Scale("gui/bg_narrow_street.png", config.screen_width, config.screen_height)
 
+###### DISCLAIMER SCREEN ######
 label disclaimer:
     scene black with fade
 
@@ -25,6 +27,7 @@ label disclaimer:
     scene black with fade
     return
 
+###### FIRST SCENE: CITY STREET (LATE AFTERNOON) ######
 label start:
     call disclaimer
 
@@ -76,6 +79,7 @@ label scene1_touch:
     p "Heartbeat steady... almost."
     jump scene2
 
+###### SECOND SCENE: CITY STREET ######
 label scene2:
     scene bg_city_street with fade
     n "You start walking."
@@ -105,5 +109,40 @@ label scene2_breathe:
     n "You try to focus on your breathing, but the tightness in your chest worsens."
     jump scene3
 
+###### THIRD SCENE: SUBTLE DISTORTION ######
 label scene3:
+    n "You pause by a shopm window."
+    n "Your reflection blinks half a second late."
+    n "Colors seems too bright. The air wavers slightly, like heat on glass."
+    
+    p "What's happening to me?"
+
+    menu:
+        "What do you do?"
+
+        "Step back":
+
+            jump scene3_help
+
+        "Close eyes":
+
+            jump scene3_quiet
+
+label scene3_help:
+    n "You stumble, pulse accelerating."
+    jump scene4
+
+label scene3_quiet:
+    n "The city noise dulls, replaced by the thudding in your eyes."
+    jump scene4
+
+###### FOURTH SCENE: NARROW SIDE STREET ######
+label scene4:
+    scene bg_narrow_street with fade
+    n "The alley closes around you"
+    n "Poeple pass by, but their faces blur and stretch."
+    n "Street signs blur, letters melting into indecipherable shapes."
+    n "Your heartbeat drowns the world."
+
+    p "I cant breathe... Plase stop..."
     return
