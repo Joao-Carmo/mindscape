@@ -10,6 +10,12 @@ image bg_city_afternoon = im.Scale("gui/bg_city_afternoon.jpg", config.screen_wi
 image bg_city_street = im.Scale("gui/bg_city_street.jpg", config.screen_width, config.screen_height)
 image bg_narrow_street = im.Scale("gui/bg_narrow_street.png", config.screen_width, config.screen_height)
 
+init python:
+    # Dedicated SFX channels so we can stop/fade them independently.
+    renpy.music.register_channel('walking', 'sfx', loop=True)
+    renpy.music.register_channel('walking_echo', 'sfx', loop=True)
+    renpy.music.register_channel('heartbeat', 'sfx', loop=True)
+
 ###### DISCLAIMER SCREEN ######
 label disclaimer:
     scene black with fade
@@ -75,6 +81,8 @@ label scene1_observe:
     jump scene2
 
 label scene1_lookup:
+    $ renpy.music.set_volume(0.2, delay=0.2)
+    play sound "audio/sfx/SunShine.wav"
     p "The sky flickers - maybe it's just the sun."
     jump scene2
 
@@ -92,14 +100,17 @@ label scene2:
 
     scene bg_city_street with Fade(2.0, 0.0, 2.0)
     $ renpy.sound.set_volume(0.5, delay=0.0)
-    play sound "audio/sfx/Walking.wav" loop  fadein 0.5
+    play walking "audio/sfx/Walking.wav" loop fadein 0.5 volume 0.3
     n "You start walking."
-    stop sound fadeout 0.05
-    play sound "audio/sfx/Walking_echo.wav" loop
+    stop walking fadeout 0.05
+    play walking_echo "audio/sfx/Walking_echo.wav" loop volume 0.6
     n "Every step echoes louder than expected"
 
+    stop walking_echo fadeout 0.5
     $ renpy.sound.set_volume(0.0, delay=0.5)
     $ renpy.music.set_volume(0.0, delay=0.5)
+
+    play audio "audio/sfx/ChildLaugh.wav"
     n "A child laughs..."
     n "..."
 
@@ -126,32 +137,35 @@ label scene2:
 
 label scene2_ignore:
     $ renpy.music.set_volume(0.7, delay=2.0)
-    #adicionar som de caminhar
     stop sound fadeout 1.0
-    $ renpy.sound.set_volume(0.8, delay=0.0)
-    play sound "audio/sfx/Heartbeat-Scene3.wav" loop
+    $ renpy.music.set_volume(0.8, delay=0.0, channel='heartbeat')
+    play walking_echo "audio/sfx/Walking_echo.wav" loop fadein 0.5 volume 0.5
+    play heartbeat "audio/sfx/Heartbeat-Scene3.wav" loop
     n "You keep walking, trying to ignore the growing discomfort."
     jump scene3
 
 label scene2_breathe:
     $ renpy.music.set_volume(0.4, delay=2.0)
-    #adicionar som de respirar
     stop sound fadeout 1.0
-    $ renpy.sound.set_volume(0.8, delay=0.0)
-    play sound "audio/sfx/Heartbeat-Scene3.wav" loop fadein 2.0
+    $ renpy.music.set_volume(0.8, delay=0.0, channel='heartbeat')
+    play sound "audio/sfx/ControlBreath.wav" fadein 0.1 volume 0.5
+    play heartbeat "audio/sfx/Heartbeat-Scene3.wav" loop fadein 2.5
     n "You try to focus on your breathing, but the tightness in your chest worsens."
     jump scene3
 
 ###### THIRD SCENE: SUBTLE DISTORTION ######
 label scene3:
+
+    stop walking_echo fadeout 1.0
+
     $ renpy.music.set_volume(0.7, delay=2.0)
-    $ renpy.sound.set_volume(0.4, delay=2.0)
+    $ renpy.music.set_volume(0.4, delay=2.0, channel='heartbeat')
 
     n "You pause by a shop window."
     n "Your reflection blinks half a second late."
     n "Colors seems too bright. The air wavers slightly, like heat on glass."
 
-    $ renpy.sound.set_volume(0.8, delay=2.0)
+    $ renpy.music.set_volume(0.8, delay=2.0, channel='heartbeat')
     
     p "What's happening to me?"
 
@@ -167,18 +181,19 @@ label scene3:
             jump scene3_quiet
 
 label scene3_help:
-    stop sound fadeout 2.0
-    $ renpy.sound.set_volume(1.0, delay=0.0)
-    play sound "audio/sfx/Heartbeat-Scene3_help_ramp.wav" fadein 0.2 
+    stop heartbeat fadeout 2.0
+    $ renpy.music.set_volume(1.0, delay=0.0, channel='heartbeat')
+    play audio "audio/sfx/Stumble.wav" 
+    play heartbeat "audio/sfx/Heartbeat-Scene3_help_ramp.wav" fadein 0.2 
     $ renpy.music.set_volume(0.5, delay=0.2) 
-    queue sound "audio/sfx/Heartbeat-Scene3_help.wav" loop
+    queue heartbeat "audio/sfx/Heartbeat-Scene3_help.wav" loop
     n "You stumble, pulse accelerating."
     jump scene4
 
 label scene3_quiet:
-    stop sound fadeout 2.0
-    $ renpy.sound.set_volume(1.0, delay=0.0)
-    play sound "audio/sfx/Heartbeat-Scene3_quiet.wav" loop fadein 2.0
+    stop heartbeat fadeout 2.0
+    $ renpy.music.set_volume(1.0, delay=0.0, channel='heartbeat')
+    play heartbeat "audio/sfx/Heartbeat-Scene3_quiet.wav" loop fadein 2.0
     $ renpy.music.set_volume(0.1, delay=2.0)
     n "The city noise dulls, replaced by the thudding in your ears."
     jump scene4
@@ -186,18 +201,18 @@ label scene3_quiet:
 ###### FOURTH SCENE: NARROW SIDE STREET ######
 label scene4:
     stop music fadeout 5.0
-    $ renpy.music.set_volume(0.4, delay=2.0)
-    play music "audio/music/Alleyway_Soundscape.wav" fadein 5.0
-    stop sound fadeout 10.0
+    queue music "audio/music/Alleyway_Soundscape.wav" fadein 5.0
+    $ renpy.music.set_volume(0.3, delay=0.0)
+    stop heartbeat fadeout 10.0
     scene bg_narrow_street with Fade(5.0, 0.0, 5.0)
-    $ renpy.sound.set_volume(0.2, delay=0.0)
-    play audio "audio/sfx/Heartbeat-Scene3_help.wav" loop fadein 3.0
+    $ renpy.sound.set_volume(0.3, delay=0.0)
+    play sound "audio/sfx/Heartbeat-Scene3_help.wav" loop fadein 3.0
     n "The alley closes around you"
-    $ renpy.sound.set_volume(0.4, delay=2.0)
+    $ renpy.sound.set_volume(0.5, delay=2.0)
     n "Poeple pass by, but their faces blur and stretch."
-    $ renpy.sound.set_volume(0.6, delay=2.0)
+    $ renpy.sound.set_volume(0.7, delay=2.0)
     n "Street signs blur, letters melting into indecipherable shapes."
-    $ renpy.music.set_volume(0.2, delay=2.0)
+    $ renpy.music.set_volume(0.1, delay=2.0)
     $ renpy.sound.set_volume(1.0, delay=2.0)
     n "Your heartbeat drowns the world."
 
