@@ -5,6 +5,9 @@ define n = Character(None, what_italic=True)
 # 'p' is protagonist (spoken lines with quotes)
 define p = Character('You', what_prefix='"', what_suffix='"')
 
+# 'f' is a stranger character (spoken lines with quotes)
+define s = Character('Stranger', what_prefix='"', what_suffix='"')
+
 # Image declarations with scaling to screen size
 image bg_city_afternoon = im.Scale("gui/bg_city_afternoon.jpg", config.screen_width, config.screen_height)
 image bg_city_street = im.Scale("gui/bg_city_street.jpg", config.screen_width, config.screen_height)
@@ -160,13 +163,13 @@ label scene3:
 
         "Step back":
 
-            jump scene3_help
+            jump scene3_step_back
 
         "Close eyes":
 
             jump scene3_quiet
 
-label scene3_help:
+label scene3_step_back:
     stop sound fadeout 2.0
     $ renpy.sound.set_volume(1.0, delay=0.0)
     play sound "audio/sfx/Heartbeat-Scene3_help_ramp.wav" fadein 0.2 
@@ -202,4 +205,45 @@ label scene4:
     n "Your heartbeat drowns the world."
 
     p "I cant breathe... Plase stop..."
+
+###### FIFTH SCENE: CRISIS / FULL PANICK ATTACK ######
+label scene5:
+    n "The world fractures."
+    n "Colors invert, the ground bends"
+    n "Whispers overlap, trams screech, everything pulses wth your heartbeat."
+    n "A figure steps forward, hand reaching towards you."
+
+    s "Hey... You're safe now. Breathe with me."
+
+    menu:
+        "What do you do?"
+
+        "Accept help":
+
+            jump relief
+
+        "Move on":
+
+            jump shutdown
+
+######  RELIEF PATH: BEACH  ######
+label relief:
+    n "The sound of the city fades."
+    n "You sit on the sand, waves breaking softly under a pale sunset."
+    n "The air is cool, the sky orange and blue."
+    n "Your breath slows, heartbeat steadying."
+
+    p "It's quiet finally... I think I'm okay."
+
+    return
+
+######  SHUTDOWN PATH: DEAM ALLEY NEAR RIVER  ######
+label shutdown:
+    n "Silence falls."
+    n "You stand alone in a dim alley near the river."
+    n "Colors drain from the world."
+    n "Your hands look distant, unreal."
+
+    p "I'm fine. Nothing's wrong."
+
     return
