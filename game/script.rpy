@@ -5,13 +5,16 @@ define n = Character(None, what_italic=True)
 # 'p' is protagonist (spoken lines with quotes)
 define p = Character('You', what_prefix='"', what_suffix='"')
 
-# 'f' is a stranger character (spoken lines with quotes)
+# 's' is a stranger character (spoken lines with quotes)
 define s = Character('Stranger', what_prefix='"', what_suffix='"')
 
 # Image declarations with scaling to screen size
 image bg_city_afternoon = im.Scale("gui/bg_city_afternoon.jpg", config.screen_width, config.screen_height)
+image bg_sky = im.Scale("gui/bg_sky.png", config.screen_width, config.screen_height)
 image bg_city_street = im.Scale("gui/bg_city_street.jpg", config.screen_width, config.screen_height)
 image bg_narrow_street = im.Scale("gui/bg_narrow_street.png", config.screen_width, config.screen_height)
+image bg_beach = im.Scale("gui/bg_beach.png", config.screen_width, config.screen_height)
+image bg_deam_alley = im.Scale("gui/bg_deam_alley.jpg", config.screen_width, config.screen_height)
 
 ###### DISCLAIMER SCREEN ######
 label disclaimer:
@@ -26,7 +29,7 @@ label disclaimer:
     at truecenter
     with dissolve
 
-    $ renpy.pause(10.0)  # duration of the disclaimer screen (you can adjust)
+    $ renpy.pause(12.0)
     scene black with fade
     return
 
@@ -78,6 +81,7 @@ label scene1_observe:
     jump scene2
 
 label scene1_lookup:
+    scene bg_sky with Fade(0.5, 0.0, 0.5)
     p "The sky flickers - maybe it's just the sun."
     jump scene2
 
@@ -128,6 +132,8 @@ label scene2:
             jump scene2_breathe
 
 label scene2_ignore:
+    scene bg_narrow_street with fade
+
     $ renpy.music.set_volume(0.7, delay=2.0)
     #adicionar som de caminhar
     stop sound fadeout 1.0
@@ -228,12 +234,14 @@ label scene5:
 
 ######  RELIEF PATH: BEACH  ######
 label relief:
+    scene bg_beach with Fade(3.0, 0.0, 3.0)
+
     n "The sound of the city fades."
     n "You sit on the sand, waves breaking softly under a pale sunset."
     n "The air is cool, the sky orange and blue."
     n "Your breath slows, heartbeat steadying."
 
-    p "It's quiet finally... I think I'm okay."
+    p "It's finally quiet... I think I'm okay."
 
     return
 
@@ -244,6 +252,6 @@ label shutdown:
     n "Colors drain from the world."
     n "Your hands look distant, unreal."
 
-    p "I'm fine. Nothing's wrong."
+    p "I'm fine. Nothing's wrong..."
 
     return
