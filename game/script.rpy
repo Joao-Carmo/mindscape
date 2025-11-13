@@ -21,6 +21,7 @@ init python:
     renpy.music.register_channel('walking', 'sfx', loop=True)
     renpy.music.register_channel('walking_echo', 'sfx', loop=True)
     renpy.music.register_channel('heartbeat', 'sfx', loop=True)
+    renpy.music.register_channel('breathing', 'sfx', loop=True)
 
 ###### DISCLAIMER SCREEN ######
 label disclaimer:
@@ -88,7 +89,7 @@ label scene1_observe:
 
 label scene1_lookup:
     scene bg_sky with Fade(0.5, 0.0, 0.5)
-    $ renpy.music.set_volume(0.2, delay=0.2)
+    $ renpy.music.set_volume(0.2, delay=0.5)
     play sound "audio/sfx/SunShine.wav"
     p "The sky flickers - maybe it's just the sun."
     jump scene2
@@ -143,8 +144,6 @@ label scene2:
             jump scene2_breathe
 
 label scene2_ignore:
-    scene bg_narrow_street with fade
-
     $ renpy.music.set_volume(0.7, delay=2.0)
     stop sound fadeout 1.0
     $ renpy.music.set_volume(0.8, delay=0.0, channel='heartbeat')
@@ -202,8 +201,9 @@ label scene3_step_back:
 label scene3_quiet:
     stop heartbeat fadeout 2.0
     $ renpy.music.set_volume(1.0, delay=0.0, channel='heartbeat')
-    play heartbeat "audio/sfx/Heartbeat-Scene3_quiet.wav" loop fadein 2.0
+    play heartbeat "audio/sfx/Heartbeat-Scene3_quiet.wav" loop fadein 1.0
     $ renpy.music.set_volume(0.1, delay=2.0)
+    show black with Dissolve(1.0)
     n "The city noise dulls, replaced by the thudding in your ears."
     jump scene4
 
@@ -211,29 +211,35 @@ label scene3_quiet:
 label scene4:
     stop music fadeout 5.0
     queue music "audio/music/Alleyway_Soundscape.wav" fadein 5.0
-    $ renpy.music.set_volume(0.3, delay=0.0)
+    $ renpy.music.set_volume(0.3, delay=5.0)
     stop heartbeat fadeout 10.0
     scene bg_narrow_street with Fade(5.0, 0.0, 5.0)
-    $ renpy.sound.set_volume(0.3, delay=0.0)
-    play sound "audio/sfx/Heartbeat-Scene3_help.wav" loop fadein 3.0
+    $ renpy.music.set_volume(0.3, delay=0.0, channel='heartbeat')
+    queue heartbeat "audio/sfx/Heartbeat-Scene3_help.wav" loop fadein 3.0
     n "The alley closes around you"
-    $ renpy.sound.set_volume(0.5, delay=2.0)
+    $ renpy.music.set_volume(0.5, delay=2.0, channel='heartbeat')
     n "Poeple pass by, but their faces blur and stretch."
-    $ renpy.sound.set_volume(0.7, delay=2.0)
+    $ renpy.music.set_volume(0.7, delay=2.0, channel='heartbeat')
     n "Street signs blur, letters melting into indecipherable shapes."
     $ renpy.music.set_volume(0.1, delay=2.0)
-    $ renpy.sound.set_volume(1.0, delay=2.0)
+    $ renpy.music.set_volume(1.0, delay=2.0, channel='heartbeat')
     n "Your heartbeat drowns the world."
 
+    play breathing "audio/sfx/Breathing_Scene4.wav" loop fadein 1.0 volume 0.7
     p "I cant breathe... Plase stop..."
 
 ###### FIFTH SCENE: CRISIS / FULL PANICK ATTACK ######
 label scene5:
     n "The world fractures."
+    play sound  "audio/sfx/Heartbeat-Scene3_quiet.wav" loop fadein 1.0
     n "Colors invert, the ground bends"
+    stop breathing fadeout 1.0
+    queue breathing "audio/sfx/Breathing_Scene5.wav" loop fadein 0.5 volume 1.0
     n "Whispers overlap, trams screech, everything pulses wth your heartbeat."
     n "A figure steps forward, hand reaching towards you."
 
+    $ renpy.sound.set_volume(0.5, delay=2.0)
+    $ renpy.music.set_volume(0.5, delay=2.0, channel='breathing')
     s "Hey... You're safe now. Breathe with me."
 
     menu:
@@ -249,11 +255,19 @@ label scene5:
 
 ######  RELIEF PATH: BEACH  ######
 label relief:
+    stop sound fadeout 3.0
+    stop breathing fadeout 3.0
+    stop heartbeat fadeout 3.0
+    stop music fadeout 5.0
+    queue music "audio/music/Beach_Soundscape.wav" fadein 3.0
+    $ renpy.music.set_volume(0.7, delay=3.0)
+    $ renpy.sound.set_volume(1.0, delay=0.0)
     scene bg_beach with Fade(3.0, 0.0, 3.0)
 
     n "The sound of the city fades."
     n "You sit on the sand, waves breaking softly under a pale sunset."
     n "The air is cool, the sky orange and blue."
+    play sound "audio/sfx/Sigh-Relief.wav"
     n "Your breath slows, heartbeat steadying."
 
     p "It's finally quiet... I think I'm okay."
@@ -262,11 +276,24 @@ label relief:
 
 ######  SHUTDOWN PATH: DEAM ALLEY NEAR RIVER  ######
 label shutdown:
+    stop music fadeout 3.0
+    queue music "audio/music/Shutdown_Alleyway_Soundscape.wav" fadein 2.0
+    $ renpy.music.set_volume(0.2, delay=5.0, channel='breathing')
+    $ renpy.sound.set_volume(0.2, delay=5.0)
+    $ renpy.music.set_volume(0.3, delay=6.0, channel='heartbeat')
+    $ renpy.music.set_volume(0.7, delay=3.0)
     n "Silence falls."
+    $ renpy.music.set_volume(0.1, delay=2.0, channel='breathing')
+    $ renpy.sound.set_volume(0.1, delay=2.0)
+    $ renpy.music.set_volume(0.2, delay=2.0, channel='heartbeat')
+    $ renpy.music.set_volume(0.8, delay=2.0)
     n "You stand alone in a dim alley near the river."
     n "Colors drain from the world."
     n "Your hands look distant, unreal."
-
+    $ renpy.music.set_volume(0.0, delay=1.0, channel='breathing')
+    $ renpy.sound.set_volume(0.0, delay=1.0)
+    $ renpy.music.set_volume(0.4, delay=2.0, channel='heartbeat')
+    $ renpy.music.set_volume(0.6, delay=3.0)
     p "I'm fine. Nothing's wrong..."
 
     return
