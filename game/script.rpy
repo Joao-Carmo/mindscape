@@ -282,7 +282,7 @@ label relief:
 
     p "It's finally quiet... I think I'm okay."
 
-    return
+    jump credits
 
 ######  SHUTDOWN PATH: DEAM ALLEY NEAR RIVER  ######
 label shutdown:
@@ -316,4 +316,21 @@ label shutdown:
     $ renpy.music.set_volume(0.6, delay=3.0)
     p "I'm fine. Nothing is wrong... - You think as your senses continues to dull."
 
+
+    jump credits
+
+label credits:
+    scene black with fade
+
+    show text "{color=#b22222}{size=80}{b}CREDITS{/b}{/size}{/color}\n\n\
+    {size=34}{color=#ffffff}Team roles:\n\
+    - Sound Design: Tomás Rocha\n\
+    - Ren'py Coding: João Carmo & Isadora Pires\n\
+    - UI Design / Visuals: Polina Andreeva & Isadora Pires{/color}{/size}" \
+    at truecenter
+    with dissolve
+
+    $ renpy.pause(12.0)
+    scene black with fade
     return
+
